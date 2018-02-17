@@ -12,7 +12,7 @@
                 <div class="mdl-card__title mdl-color--primary mdl-color-text--white">
                     <h2 class="mdl-card__title-text text-center full-span block">
 
-                        {{ trans('titles.app') }}aaaa
+                        {{ trans('titles.app') }}
 
                     </h2>
                 </div>
@@ -42,11 +42,11 @@
                     {!! Form::close() !!}
 
                 </div>
-                <!--<div class="mdl-card__actions mdl-card--border">
+                <div class="mdl-card__actions mdl-card--border">
 
                     @include('partials.socials-icons')
 
-                </div>—->
+                </div>
                 <div class="mdl-card__actions mdl-card--border">
 
                     {!! HTML::link(route('password.request'), trans('auth.forgot'), array('id' => 'forgot', 'class' => 'mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect left')) !!}
