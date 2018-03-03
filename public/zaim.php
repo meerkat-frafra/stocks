@@ -1,7 +1,7 @@
 <?php
 ini_set('display_errors', "On");
 
-require_once('../library/HTTP/OAuth/Consumer.php');
+require_once('../../library/HTTP/OAuth/Consumer.php');
 session_start();
 
 // Provider info
