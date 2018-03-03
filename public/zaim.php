@@ -1,7 +1,8 @@
 <?php
 ini_set('display_errors', "On");
+ini_set('include_path', '.:/app/.heroku/php/lib/php:/app/library');
 
-require_once('../../library/HTTP/OAuth/Consumer.php');
+require_once('HTTP/OAuth/Consumer.php');
 session_start();
 
 // Provider info
