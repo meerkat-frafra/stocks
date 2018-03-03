@@ -22,7 +22,7 @@ class CreateStocksTable extends Migration
             $table->integer('price'); // 購入価格
             $table->string('shop'); // 購入店舗
             $table->datetime('purchase_date'); // 購入日時
-            $table->integer('balance'); // 残高
+            $table->integer('balance'); // 在庫
             $table->integer('rank'); // 表示順位
             $table->boolean('is_sync'); // 自動連携かどうか
             $table->boolean('is_show'); // 表示フラグ
