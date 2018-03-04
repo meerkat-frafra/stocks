@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Validator;
 
-class StockController extends Controller
+class StocksController extends Controller
 {
   /**
    * Create a new controller instance.
