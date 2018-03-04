@@ -56,6 +56,10 @@
 				<i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">invert_colors</i>
 				{{ Lang::get('titles.adminThemesList') }}
 			</a>
+			<a class="mdl-navigation__link {{ Request::is('stocks') ? 'mdl-navigation__link--current' : null }}" href="{{ url('/stocks') }}">
+				<i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">invert_colors</i>
+				{{ Lang::get('titles.adminStocksList') }}
+			</a>
 			<a class="mdl-navigation__link {{ Request::is('logs') ? 'mdl-navigation__link--current' : null }}" href="{{ url('/logs') }}">
 				<i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">bug_report</i>
 				{{ Lang::get('titles.adminLogs') }}

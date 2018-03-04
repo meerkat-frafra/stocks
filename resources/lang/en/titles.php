@@ -28,6 +28,9 @@ return [
     'adminThemesList' => 'Themes',
     'adminThemesAdd'  => 'Add New Theme',
 
+    'adminStocksList' => 'Stocks',
+    'adminStocksAdd'  => 'Add New Stock',
+
     'adminLogs'		 => 'Log Files',
     'adminPHP'		  => 'PHP Info',
     'adminRoutes'	=> 'Routing Info',
