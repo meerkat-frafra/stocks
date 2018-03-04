@@ -11,9 +11,10 @@ use DB;
 use Request;
 use Log;
 use Stock;
-use HTTP_OAuth_Consumer;
-use HTTP_Request2;
-use HTTP_OAuth_Consumer_Request;
+use HTTP;
+//use HTTP_OAuth_Consumer;
+//use HTTP_Request2;
+//use HTTP_OAuth_Consumer_Request;
 
 class ZaimApiController extends Controller
 {
