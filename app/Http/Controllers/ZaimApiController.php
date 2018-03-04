@@ -11,7 +11,7 @@ use DB;
 use Request;
 use Log;
 use Stock;
-use Lib
+use Lib;
 
 class ZaimApiController extends Controller
 {
