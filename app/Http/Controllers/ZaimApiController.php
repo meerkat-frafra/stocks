@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
-ini_set('display_errors', "On");
-ini_set('include_path', '.:/app/.heroku/php/lib/php:/app/library');
+//ini_set('display_errors', "On");
+//ini_set('include_path', '.:/app/.heroku/php/lib/php:/app/library');
 
-require_once('HTTP/OAuth/Consumer.php');
+//require_once('HTTP/OAuth/Consumer.php');
 
 use DB;
 use Request;
 use Log;
 use Stock;
+use Lib
 
 class ZaimApiController extends Controller
 {
@@ -49,12 +50,12 @@ class ZaimApiController extends Controller
 		$content = '';
 		try {
   			// Initialize HTTP_OAuth_Consumer
-			$oauth = new HTTP_OAuth_Consumer($consumer_key, $consumer_secret);
+			$oauth = new Lib\HTTP_OAuth_Consumer($consumer_key, $consumer_secret);
  
 			// Enable SSL
-			$http_request = new HTTP_Request2();
+			$http_request = new Lib\HTTP_Request2();
 			$http_request->setConfig('ssl_verify_peer', false);
-			$consumer_request = new HTTP_OAuth_Consumer_Request;
+			$consumer_request = new Lib\HTTP_OAuth_Consumer_Request;
 			$consumer_request->accept($http_request);
 			$oauth->accept($consumer_request);
   
