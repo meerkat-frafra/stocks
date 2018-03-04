@@ -60,7 +60,7 @@ class ZaimApiController extends Controller
 			if (!$request->session()->exists('type')) $request->session()->put('type', null);
   
   			// 2 Authorize
-			if ($request->session()->get('type')=='authorize' && isset($request->input('oauth_token'), $request->input('oauth_verifier'))) {
+			if ($request->session()->get('type')=='authorize' && isset($request->input('oauth_token')) && isset($request->input('oauth_verifier'))) {
 				// Exchange the Request Token for an Access Token
 				$oauth->setToken($request->session()->get('oauth_token'));
 				$oauth->setTokenSecret($request->session()->get('oauth_token_secret'));
