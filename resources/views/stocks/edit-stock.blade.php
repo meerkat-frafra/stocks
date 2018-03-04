@@ -51,7 +51,7 @@
 
 					</div>
 
-					{!! Form::model($stock, array('action' => array('StocksManagementController@update', $stock->id), 'method' => 'PUT')) !!}
+					{!! Form::model($stock, array('action' => array('StocksController@update', $stock->id), 'method' => 'PUT')) !!}
 
 						{!! csrf_field() !!}
 

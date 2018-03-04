@@ -25,7 +25,7 @@
           </div>
           <div class="panel-body">
 
-            {!! Form::open(array('action' => 'StocksManagementController@store', 'method' => 'POST', 'role' => 'form')) !!}
+            {!! Form::open(array('action' => 'StocksController@store', 'method' => 'POST', 'role' => 'form')) !!}
 
               {!! csrf_field() !!}
 
