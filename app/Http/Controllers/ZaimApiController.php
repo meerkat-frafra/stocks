@@ -5,16 +5,16 @@ namespace App\Http\Controllers;
 //ini_set('display_errors', "On");
 //ini_set('include_path', '.:/app/.heroku/php/lib/php:/app/library');
 
-//require_once('HTTP/OAuth/Consumer.php');
+require_once('/app/library/HTTP/OAuth/Consumer.php');
 
 use DB;
 use Request;
 use Log;
 use Stock;
-use HTTP;
-//use HTTP_OAuth_Consumer;
-//use HTTP_Request2;
-//use HTTP_OAuth_Consumer_Request;
+//use HTTP;
+use HTTP_OAuth_Consumer;
+use HTTP_Request2;
+use HTTP_OAuth_Consumer_Request;
 
 class ZaimApiController extends Controller
 {
