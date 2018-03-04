@@ -8,6 +8,7 @@ ini_set('include_path', '.:/app/.heroku/php/lib/php:/app/library');
 require_once('HTTP/OAuth/Consumer.php');
 
 use DB;
+use Request;
 use Log;
 use Stock;
 
