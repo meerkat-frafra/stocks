@@ -73,7 +73,7 @@ class ZaimApiController extends Controller
 			}
  
   			// 3 Access
-			if ($request->session()->get(type')=='access') {
+			if ($request->session()->get('type')=='access') {
 				// Accessing Protected Resources
 				$oauth->setToken($request->session()->get('oauth_token'));
 				$oauth->setTokenSecret($request->session()->get('oauth_token_secret'));
