@@ -164,7 +164,7 @@
                 @include('partials.mdl-search')
             @endif
 
-            <a href="{{ url('/stocks/create') }}" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect mdl-color-text--white" title="Add New User" id="add_stock">
+            <a href="{{ url('/stocks/create') }}" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect mdl-color-text--white" title="Add New Stok" id="add_stock">
                 <i class="material-icons" aria-hidden="true">add</i>
                 <span class="sr-only">{{ trans('stocks.btnAddStock') }}</span>
                 <span class="mdl-tooltip mdl-tooltip--top" for="add_stock">

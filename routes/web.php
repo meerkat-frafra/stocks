@@ -144,6 +144,7 @@ Route::group(['middleware' => ['auth', 'activated', 'role:admin']], function () 
     Route::resource('stocks', 'StocksController', [
         'names'    => [
             'index'   => 'stocks',
+            'create'  => 'create',
             'destroy' => 'stocks.destroy',
         ],
     ]);
