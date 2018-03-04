@@ -64,7 +64,7 @@ class ZaimApiController extends Controller
 				// Exchange the Request Token for an Access Token
 				$oauth->setToken($request->session()->get('oauth_token'));
 				$oauth->setTokenSecret($request->session()->get('oauth_token_secret'));
-				$oauth->getAccessToken($access_url, $request->input('oauth_verifier');
+				$oauth->getAccessToken($access_url, $request->input('oauth_verifier'));
  
 				// Save an Access Token
 				$request->session()->put('type', 'access');
