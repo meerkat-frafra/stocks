@@ -145,3 +145,6 @@ Route::group(['middleware' => ['auth', 'activated', 'role:admin']], function () 
     Route::get('php', 'AdminDetailsController@listPHPInfo');
     Route::get('routes', 'AdminDetailsController@listRoutes');
 });
+
+    //  Homepage Route - Redirect based on user role is in controller.
+    Route::get('/zaim_api', ['as' => 'public.zaim_api', 'uses' => 'ZaimApiController@index']);
