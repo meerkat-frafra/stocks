@@ -2,16 +2,11 @@
 
 namespace App\Http\Controllers;
 
-//ini_set('display_errors', "On");
-//ini_set('include_path', '.:/app/.heroku/php/lib/php:/app/library');
-
-require_once('/app/library/HTTP/OAuth/Consumer.php');
-
 use DB;
-use Request;
+use Illuminate\Http\Request;
+//use Request;
 use Log;
 use Stock;
-//use HTTP;
 use HTTP_OAuth_Consumer;
 use HTTP_Request2;
 use HTTP_OAuth_Consumer_Request;
@@ -48,35 +43,36 @@ class ZaimApiController extends Controller
 		// Consumer info
 		$consumer_key = '451ea73a551f5ef81bbe7680bf8eeb8fb5056c6a';
 		$consumer_secret = '2a44b1a5be33ee3e80cbfeee4e7ed9810cd9597b';
-		$callback_url = sprintf('http://%s%s', $_SERVER['HTTP_HOST'], $_SERVER['SCRIPT_NAME']);
+		//$callback_url = sprintf('http://%s%s', $_SERVER['HTTP_HOST'], $_SERVER['SCRIPT_NAME']);
+    $callback_url = sprintf('http://%s%s', $_SERVER['HTTP_HOST'], '/zaim_api');
 
 		$content = '';
 		try {
   			// Initialize HTTP_OAuth_Consumer
 			$oauth = new HTTP_OAuth_Consumer($consumer_key, $consumer_secret);
- 
+
 			// Enable SSL
 			$http_request = new HTTP_Request2();
 			$http_request->setConfig('ssl_verify_peer', false);
 			$consumer_request = new HTTP_OAuth_Consumer_Request;
 			$consumer_request->accept($http_request);
 			$oauth->accept($consumer_request);
-  
-			if (!$request->session()->exists('type')) $request->session()->put('type', null);
-  
+
+			if (!$request->session()->get('type')) $request->session()->put('type', null);
+
   			// 2 Authorize
 			if ($request->session()->get('type')=='authorize') {
 				// Exchange the Request Token for an Access Token
 				$oauth->setToken($request->session()->get('oauth_token'));
 				$oauth->setTokenSecret($request->session()->get('oauth_token_secret'));
 				$oauth->getAccessToken($access_url, $request->input('oauth_verifier'));
- 
+
 				// Save an Access Token
-				$request->session()->put('type', 'access');
-				$request->session()->put('oauth_token', $oauth->getToken());
-				$request->session()->put('oauth_token_secret', $oauth->getTokenSecret());
+        $request->session()->put('type', 'access');
+        $request->session()->put('oauth_token', $oauth->getToken());
+        $request->session()->put('oauth_token_secret', $oauth->getTokenSecret());
 			}
- 
+
   			// 3 Access
 			if ($request->session()->get('type')=='access') {
 				// Accessing Protected Resources
@@ -88,25 +84,24 @@ class ZaimApiController extends Controller
 				$result2 = $oauth->sendRequest('https://api.zaim.net/v2/home/money', array(), 'GET');
 				$content2 = $result2->getBody();
 
-				dd($content,$content2);
+dd($content,$content2);
 
 				// 1 Request
 			} else {
 				// Get a Request Token
 				$oauth->getRequestToken($request_url, $callback_url);
- 
+
 				// Save a Request Token
 				$request->session()->put('type', 'authorize');
-				$request->session()->put('oauth_token', $oauth->getToken());
-				$request->session()->put('oauth_token_secret', $oauth->getTokenSecret());
- 
+        $request->session()->put('oauth_token', $oauth->getToken());
+        $request->session()->put('oauth_token_secret', $oauth->getTokenSecret());
+
 				// Get an Authorize URL
 				$authorize_url = $oauth->getAuthorizeURL($authorize_url);
-				
-				dd($authorize_url);
+        return redirect()->away($authorize_url);
 
 			}
- 
+
 		} catch (Exception $e) {
 			Log::error($e->getMessage());
 		}
