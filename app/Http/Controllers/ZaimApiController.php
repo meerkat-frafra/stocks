@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use DB;
 use Illuminate\Http\Request;
-//use Request;
 use Log;
 use Stock;
 use HTTP_OAuth_Consumer;
@@ -23,17 +22,18 @@ class ZaimApiController extends Controller
   {
     // Provider info
 		$this->provider_base = 'https://api.zaim.net/v2/auth/';
-		$this->request_url = $this->provider_base.'request';
+		$this->request_url   = $this->provider_base.'request';
 		$this->authorize_url = 'https://auth.zaim.net/users/auth';
-		$this->access_url = $this->provider_base.'access';
-		$this->resource_url = 'https://api.zaim.net/v2/home/user/verify';
-		$this->shopping_url = 'https://api.zaim.net/v2/home/money';
+		$this->access_url    = $this->provider_base.'access';
+		$this->resource_url  = 'https://api.zaim.net/v2/home/user/verify';
+		$this->shopping_url  = 'https://api.zaim.net/v2/home/money';
+    $this->category_url  = 'https://api.zaim.net/v2/home/category';
+    $this->genre_url     = 'https://api.zaim.net/v2/home/genre';
 
 		// Consumer info
-		$this->consumer_key = '451ea73a551f5ef81bbe7680bf8eeb8fb5056c6a';
+		$this->consumer_key    = '451ea73a551f5ef81bbe7680bf8eeb8fb5056c6a';
 		$this->consumer_secret = '2a44b1a5be33ee3e80cbfeee4e7ed9810cd9597b';
-		//$callback_url = sprintf('http://%s%s', $_SERVER['HTTP_HOST'], $_SERVER['SCRIPT_NAME']);
-    $this->callback_url = sprintf('http://%s%s', $_SERVER['HTTP_HOST'], '/zaim_api');
+    $this->callback_url    = sprintf('http://%s%s', $_SERVER['HTTP_HOST'], '/zaim_api');
   }
 
   /**
@@ -87,7 +87,7 @@ class ZaimApiController extends Controller
                   'profile_image_url'  => '',
                   'name'               => '',
                   'zaim_user_id'       => '',
-                  'user_info'         => '',
+                  'user_info'          => '',
                   ];
         DB::table('zaims')->insert($input);
 
@@ -118,13 +118,10 @@ class ZaimApiController extends Controller
 
     $content = '';
     try {
+      // OAuth 認証
       $oauth = self::_oauth();
-
-      // Accessing Protected Resources
-      $oauth->setToken($request->session()->get('oauth_token'));
-      $oauth->setTokenSecret($request->session()->get('oauth_token_secret'));
-      $result = $oauth->sendRequest($this->resource_url, array(), 'GET');
-      $content = $result->getBody();
+      // Zaim Api 呼び出し
+      $content = self::_call($this->resource_url, $oauth, $request);
 
       // update zaims table.
       $zaimUserInfo = json_decode($content, true);
@@ -156,14 +153,10 @@ class ZaimApiController extends Controller
 
     $content = '';
     try {
+      // OAuth 認証
       $oauth = self::_oauth();
-
-      // Accessing Protected Resources
-      $oauth->setToken($request->session()->get('oauth_token'));
-      $oauth->setTokenSecret($request->session()->get('oauth_token_secret'));
-
-      $result = $oauth->sendRequest($this->shopping_url, array(), 'GET');
-      $content = $result->getBody();
+      // Zaim Api 呼び出し
+      $content = self::_call($this->shopping_url, $oauth, $request);
 
       $zaimShoppingInfo = json_decode($content, true);
 
@@ -200,6 +193,86 @@ class ZaimApiController extends Controller
   }
 
   /**
+   * カテゴリ情報取得
+   *
+   * @return \Illuminate\Http\Response
+   */
+  public function category(Request $request)
+  {
+    $token = DB::table('zaims')->where('user_id', 1)->first();
+    if (empty($token)) return redirect('zaim_api');
+
+    $content = '';
+    try {
+      // OAuth 認証
+      $oauth = self::_oauth();
+      // Zaim Api 呼び出し
+      $content = self::_call($this->category_url, $oauth, $request);
+
+      $conArr = json_decode($content, true);
+
+      if (empty($conArr['categories'])) exit;
+
+      DB::table('zaim_categories')->delete();
+      foreach ($conArr['categories'] as $c) {
+        $input = [
+          'category_id'        => $c['id'],
+          'name'               => $c['name'],
+          'mode'               => $c['mode'],
+          'sort'               => $c['sort'],
+          'parent_category_id' => $c['parent_category_id'],
+          'active'             => $c['active'],
+          'modified'           => $c['modified'],
+        ];
+        DB::table('zaim_categories')->insert($input);
+      }
+      Log::info('ZaimApiからカテゴリ情報を取得しました');
+    } catch (Exception $e) {
+      Log::error($e->getMessage());
+    }
+  }
+
+  /**
+   * ジャンル情報取得
+   *
+   * @return \Illuminate\Http\Response
+   */
+  public function genre(Request $request)
+  {
+    $token = DB::table('zaims')->where('user_id', 1)->first();
+    if (empty($token)) return redirect('zaim_api');
+
+    $content = '';
+    try {
+      // OAuth 認証
+      $oauth = self::_oauth();
+      // Zaim Api 呼び出し
+      $content = self::_call($this->genre_url, $oauth, $request);
+
+      $conArr = json_decode($content, true);
+
+      if (empty($conArr['genres'])) exit;
+
+      DB::table('zaim_genres')->delete();
+      foreach ($conArr['genres'] as $c) {
+        $input = [
+          'genre_id'        => $c['id'],
+          'name'            => $c['name'],
+          'sort'            => $c['sort'],
+          'active'          => $c['active'],
+          'category_id'     => $c['category_id'],
+          'parent_genre_id' => $c['parent_genre_id'],
+          'modified'        => $c['modified'],
+        ];
+        DB::table('zaim_genres')->insert($input);
+      }
+      Log::info('ZaimApiからジャンル情報を取得しました');
+    } catch (Exception $e) {
+      Log::error($e->getMessage());
+    }
+  }
+
+  /**
    * Zaim OAuth 認証
    *
    * @return \Illuminate\Http\Response
@@ -217,5 +290,20 @@ class ZaimApiController extends Controller
     $oauth->accept($consumer_request);
 
     return $oauth;
+  }
+
+  /**
+   * Zaim Api 呼び出し
+   *
+   * @return \Illuminate\Http\Response
+   */
+  private function _call($url, $oauth, $request)
+  {
+    // Accessing Protected Resources
+    $oauth->setToken($request->session()->get('oauth_token'));
+    $oauth->setTokenSecret($request->session()->get('oauth_token_secret'));
+
+    $result = $oauth->sendRequest($url, array(), 'GET');
+    return $result->getBody();
   }
 }

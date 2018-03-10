@@ -155,4 +155,6 @@ Route::group(['middleware' => ['auth', 'activated', 'role:admin']], function () 
     //  Zaim Api Call Controller
     Route::get('/zaim_api/profile', ['as' => 'public.zaim_api.profile', 'uses' => 'ZaimApiController@profile']);
     Route::get('/zaim_api/receipt', ['as' => 'public.zaim_api.receipt', 'uses' => 'ZaimApiController@receipt']);
+    Route::get('/zaim_api/category', ['as' => 'public.zaim_api.category', 'uses' => 'ZaimApiController@category']);
+    Route::get('/zaim_api/genre', ['as' => 'public.zaim_api.genre', 'uses' => 'ZaimApiController@genre']);
     Route::get('/zaim_api', ['as' => 'public.zaim_api', 'uses' => 'ZaimApiController@index']);
