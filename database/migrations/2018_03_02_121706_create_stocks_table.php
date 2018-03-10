@@ -25,6 +25,7 @@ class CreateStocksTable extends Migration
             $table->integer('balance'); // 在庫
             $table->integer('rank'); // 表示順位
             $table->boolean('is_sync'); // 自動連携かどうか
+            $table->string('receipt_id'); // レシート ID
             $table->boolean('is_show'); // 表示フラグ
             $table->timestamps();
         });

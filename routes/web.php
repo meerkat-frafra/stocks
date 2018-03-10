@@ -152,5 +152,7 @@ Route::group(['middleware' => ['auth', 'activated', 'role:admin']], function () 
     Route::get('routes', 'AdminDetailsController@listRoutes');
 });
 
-    //  Homepage Route - Redirect based on user role is in controller.
+    //  Zaim Api Call Controller
+    Route::get('/zaim_api/profile', ['as' => 'public.zaim_api.profile', 'uses' => 'ZaimApiController@profile']);
+    Route::get('/zaim_api/receipt', ['as' => 'public.zaim_api.receipt', 'uses' => 'ZaimApiController@receipt']);
     Route::get('/zaim_api', ['as' => 'public.zaim_api', 'uses' => 'ZaimApiController@index']);
