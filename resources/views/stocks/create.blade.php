@@ -32,12 +32,12 @@
         <div class="form-group">
           <label for="limit">Limit</label>
           @if ($errors->has('limit'))
-          {{ Form::text('limit', null, ['type' => 'date', 'class' => 'form-control is-invalid', 'id' => 'limit', 'placeholder' => 'input date.']) }}
+          {{ Form::input('date', 'limit', null, ['class' => 'form-control is-invalid', 'id' => 'limit', 'placeholder' => 'input date.']) }}
           <div class="invalid-feedback">
             {{ $errors->first('limit') }}
           </div>
           @else
-          {{ Form::text('limit', null, ['type' => 'date', 'class' => 'form-control', 'id' => 'limit', 'placeholder' => 'input date.']) }}
+          {{ Form::input('date', 'limit', null, ['class' => 'form-control', 'id' => 'limit', 'placeholder' => 'input date.']) }}
           @endif
           
         </div>
