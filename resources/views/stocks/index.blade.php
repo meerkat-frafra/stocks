@@ -31,11 +31,11 @@
           <!--<td><input type="range" class="custom-range" min="0" max="5" id="customRange2"></td>-->
           <td width="10%">
             @if ($data['usage'] == 1)
-              <img src="/images/happy.png" alt="happy" class="" style="max-width:60%;">
+              <img src="/images/happy.png" alt="happy" class="" style="width:40px;">
             @elseif ($data['usage'] == 2)
-              <img src="/images/normal.png" alt="normal" class="" style="max-width:60%;">
+              <img src="/images/normal.png" alt="normal" class="" style="width:40px;">
             @else ($data['usage'] == 3)
-            <img src="/images/sad.png" alt="sad" class="" style="max-width:60%;">
+            <img src="/images/sad.png" alt="sad" class="" style="width:40px;">
             @endif
           </td>
           <td>
