@@ -84,7 +84,7 @@ class StocksController extends Controller
         $input['balance'] = 1;
         $input['category'] = 0;
         $input['shop'] = '';
-        $input['author'] = 'nonomura';
+        $input['author'] = 1;
         $input['rebuy'] = 0;
         $input['rank'] = 0;
         $input['price'] = 0;
