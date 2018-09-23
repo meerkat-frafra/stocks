@@ -35,4 +35,26 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
+    'github' => [
+        'client_id' => env('GITHUB_CLIENT_ID'),
+        'client_secret' => env('GITHUB_CLIENT_SECRET'),
+        'redirect' => env('GITHUB_CALLBACK_URL'),
+    ],
+
+    'line'   => [
+        'client_id'     => env('LINE_CLIENT_ID'),
+        'client_secret' => env('LINE_CLIENT_SECRET'),
+        'redirect'      => env('LINE_REDIRECT'),
+    ],
+    'yahoo'  => [
+        'client_id'     => env('YAHOO_CLIENT_ID'),
+        'client_secret' => env('YAHOO_CLIENT_SECRET'),
+        'redirect'      => env('YAHOO_REDIRECT'),
+    ],
+
+    'zaim' => [
+        'client_id' => env('ZAIM_CONSUMER_KEY'),
+        'client_secret' => env('ZAIM_CONSUMER_SECRET'),
+        'redirect' => env('ZAIM_CALLBACK_URL'),
+    ],
 ];

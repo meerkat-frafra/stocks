@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
+use Socialite;
+
 class LoginController extends Controller
 {
     /*
@@ -35,5 +37,29 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+    public function redirectToProvider($service)
+    {
+        return Socialite::driver($service)->redirect();
+    }
+
+    public function handleProviderCallback($service)
+    {
+        $user = Socialite::driver($service)->user();
+        
+        // $user->token;
+    }
+
+    public function redirectToZaimProvider()
+    {
+        return Socialite::driver('zaim')->redirect();
+    }
+
+    public function handleZaimProviderCallback()
+    {
+        $user = Socialite::driver('zaim')->user();
+        
+        // $user->token;
     }
 }

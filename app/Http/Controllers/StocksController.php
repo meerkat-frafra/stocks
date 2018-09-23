@@ -3,14 +3,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use DB;
+use Google_Client;
+use Google_Service_Books;
 
 class StocksController extends Controller
 {
-    var $stocks;
-    var $nostocks;
+    // var $stocks;
+    // var $nostocks;
 
-    var $url1;
-    var $url2;
+    // var $url1;
+    // var $url2;
 
     var $m_space;
 
@@ -23,20 +26,20 @@ class StocksController extends Controller
     {
         //$this->middleware('auth');
 
-        $this->url1 = 'stocks.json';
-        // $json1 = file_get_contents($this->url1);
-        // $json1 = json_decode($json1, true);
-        $json1 = self::getJson1();
+        // $this->url1 = 'stocks.json';
+        // // $json1 = file_get_contents($this->url1);
+        // // $json1 = json_decode($json1, true);
+        // $json1 = self::getJson1();
 
-        $this->url2 = 'nostocks.json';
-        // $json2 = file_get_contents($this->url2);
-        // $json2 = json_decode($json2, true);
-        $json2 = self::getJson2();
+        // $this->url2 = 'nostocks.json';
+        // // $json2 = file_get_contents($this->url2);
+        // // $json2 = json_decode($json2, true);
+        // $json2 = self::getJson2();
 
-        $this->stocks = $json1;
-        $this->nostocks = $json2;
+        // $this->stocks = $json1;
+        // $this->nostocks = $json2;
 
-        $this->m_space = ['' => '選択してください', 1 => 'Refrigerator', 2 => 'Pantry', 3 => 'Freezer', 4 => 'Other'];
+        $this->m_space = ['' => '選択してください', 1 => '冷蔵庫', 2 => '貯蔵庫', 3 => '冷凍庫', 4 => 'その他'];
     }
 
     /**
@@ -46,8 +49,9 @@ class StocksController extends Controller
      */
     public function index()
     {
-        $stocks = $this->stocks;
+        // $stocks = $this->stocks;
         $m_space = $this->m_space;
+        $stocks = DB::table('stocks')->get();
 
         return view('stocks.index', compact('stocks', 'm_space'));
     }
@@ -64,24 +68,39 @@ class StocksController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|max:255',
             'space' => 'required|in:0,1,2,3',
-            'limit' => 'date',
+            'limit_date' => '',
             'memo' => '',
         ]);
         
         $input = $request->all();
 
+        if (!$input['limit_date']) $input['limit_date'] = '';
+        if (!$input['memo']) $input['memo'] = '';
+
         unset($input['_token']);
         
-        $input['id'] = mt_rand();
+        // $input['id'] = mt_rand();
         $input['usage'] = 1;
+        $input['balance'] = 1;
+        $input['category'] = 0;
+        $input['shop'] = '';
         $input['author'] = 'nonomura';
+        $input['rebuy'] = 0;
+        $input['rank'] = 0;
+        $input['price'] = 0;
+        $input['is_sync'] = false;
+        $input['receipt_id'] = '';
+        $input['is_show'] = false;
+        $input['purchase_date'] = date('Y-m-d H:i:s');
         $input['created_at'] = date('Y-m-d H:i:s');
         $input['updated_at'] = date('Y-m-d H:i:s');
 
-        $this->stocks['data'][] = $input;
+        // $this->stocks['data'][] = $input;
         // $json = json_encode($this->stocks);
         // file_put_contents($this->url1, $json);
-        self::putJson1();
+        // self::putJson1();
+
+        DB::table('stocks')->insert($input);
         
         return redirect('/stocks');
     }
@@ -94,22 +113,22 @@ class StocksController extends Controller
     public function edit($id)
     {
         $m_space = $this->m_space;
-        
-        $input = [];
         $isStock = true;
 
-        $key = array_search($id, array_column($this->stocks['data'], 'id'));
-        if ($key !== false) {
-            $input = $this->stocks['data'][$key];
-        } else {
+        $input = DB::table('stocks')->where('id', $id)->first();
+        
+        // $key = array_search($id, array_column($this->stocks['data'], 'id'));
+        // if ($key !== false) {
+        //     $input = $this->stocks['data'][$key];
+        // } else {
             
-            $key = array_search($id, array_column($this->nostocks['data'], 'id'));
-            if (!$key) abort(500, 'Record not found.');
+        //     $key = array_search($id, array_column($this->nostocks['data'], 'id'));
+        //     if (!$key) abort(500, 'Record not found.');
 
-            $input = $this->nostocks['data'][$key];
-            $isStock = false;
+        //     $input = $this->nostocks['data'][$key];
+        //     $isStock = false;
             
-        }
+        // }
         
         return view('stocks.edit', compact('input', 'isStock', 'm_space'));
         
@@ -120,34 +139,30 @@ class StocksController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|max:255',
             'space' => 'required|in:0,1,2,3',
-            'limit' => 'date',
+            'limit_date' => '',
             'memo' => '',
         ]);
         
         $input = $request->all();
+        $id = $input['id'];
+
+        if (!$input['limit_date']) $input['limit_date'] = '';
+        if (!$input['memo']) $input['memo'] = '';
 
         unset($input['_token']);
-        
-        $input['id'] = mt_rand();
-        $input['usage'] = 1;
-        $input['author'] = 'nonomura';
-        $input['created_at'] = date('Y-m-d H:i:s');
-        $input['updated_at'] = date('Y-m-d H:i:s');
+        unset($input['id']);
+        unset($input['isStock']);
 
-        $this->stocks['data'][] = $input;
-        self::putJson1();
+        $input['updated_at'] = date('Y-m-d H:i:s');
+        
+        DB::table('stocks')->where('id', $id)->update($input);
         
         return redirect('/stocks');
     }
  
     public function destroy($id)
     {
-        $key = array_search($id, array_column($this->nostocks['data'], 'id'));
-        unset($this->nostocks['data'][$key]);
-
-        $this->nostocks['data'] = array_values($this->nostocks['data']);
-        
-        self::putJson2();
+        DB::table('stocks')->where('id', $id)->delete();
 
         return redirect('/stocks/history');
 
@@ -155,9 +170,10 @@ class StocksController extends Controller
 
     public function history()
     {
-        $nostocks = $this->nostocks;
+        // $nostocks = $this->nostocks;
         $m_space = $this->m_space;
-        
+        $nostocks = DB::table('stocks')->where('usage', 3)->get();
+
         return view('stocks.history', compact('nostocks', 'm_space'));
     }
 
@@ -165,74 +181,100 @@ class StocksController extends Controller
     {
         /*
          * size 
-         *  0 : well
-         *  1 : half
-         *  2 : empty
+         *  1 : well
+         *  2 : half
+         *  3 : empty
          * 
         */
-        $now = date('Y-m-d H:i:s');
-
-        $key = array_search($id, array_column($this->stocks['data'], 'id'));
-        switch ($size) {
-            case 1:
-                $this->stocks['data'][$key]['usage'] = 1;
-                $this->stocks['data'][$key]['updated_at'] = $now;
-                break;
-                
-            case 2:
-                $this->stocks['data'][$key]['usage'] = 2;
-                $this->stocks['data'][$key]['updated_at'] = $now;
-                break;
-
-            case 3:
-                $this->stocks['data'][$key]['usage'] = 3;
-                $this->stocks['data'][$key]['updated_at'] = $now;
-                
-                $this->nostocks['data'][] = $this->stocks['data'][$key];
-                self::putJson2();
-                unset($this->stocks['data'][$key]);
-                
-                break;
-            default:
-        }
-        self::putJson1();
+        $input['usage'] = $size;
+        $input['updated_at'] = date('Y-m-d H:i:s');
+        DB::table('stocks')->where('id', $id)->update($input);
 
         return redirect('/stocks');
     }
 
-    public function gotit($id)
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function fumi()
     {
-        $now = date('Y-m-d H:i:s');
+        // $stocks = $this->stocks;
+        $m_space = $this->m_space;
+        $stocks = DB::table('stocks')->get();
 
-        $key = array_search($id, array_column($this->stocks['data'], 'id'));
-        $this->nostocks['data'][$key]['usage'] = 1;
-        $this->nostocks['data'][$key]['updated_at'] = $now;        
-
-        $this->stocks['data'][] = $this->nostocks['data'][$key];
-        self::putJson1();
-        unset($this->nostocks['data'][$key]);
-        self::putJson2();
-
-        return redirect('/stocks/history');
+        return view('stocks.fumi_index', compact('stocks', 'm_space'));
     }
 
-    private function putJson1() {
-        $json = json_encode($this->stocks);
-        return file_put_contents($this->url1, $json);
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function newindex()
+    {
+        // $stocks = $this->stocks;
+        $m_space = $this->m_space;
+        $stocks = DB::table('stocks')->get();
+
+        return view('stocks.newindex', compact('stocks', 'm_space'));
     }
 
-    private function putJson2() {
-        $json = json_encode($this->nostocks);
-        return file_put_contents($this->url2, $json);
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function space($space)
+    {
+        // $stocks = $this->stocks;
+        $m_space = $this->m_space;
+        $stocks = DB::table('stocks')->where('space', $space)->get();
+
+        return view('stocks.newindex', compact('stocks', 'm_space'));
     }
 
-    private function getJson1() {
-        $json1 = file_get_contents($this->url1);
-        return json_decode($json1, true);
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function zaim()
+    {
+        // $stocks = $this->stocks;
+        $m_space = $this->m_space;
+
+        $category = DB::table('zaim_categories')->get();
+        $genre = DB::table('zaim_genres')->get();
+
+        $stocks = DB::table('zaim_records')
+        ->leftJoin('zaim_categories', 'zaim_records.category_id', '=', 'zaim_categories.category_id')
+        ->leftJoin('zaim_genres', 'zaim_records.genre_id', '=', 'zaim_genres.genre_id')
+        ->select('zaim_records.*', 'zaim_categories.name as category_name', 'zaim_genres.name as genre_name')
+        ->whereNotIn('zaim_records.name', ['', '外税', '割引'])
+        ->where('zaim_records.category_id', '101')
+        ->where('zaim_records.genre_id', '10101')
+        ->get();
+
+        return view('stocks.zaim', compact('stocks', 'm_space'));
     }
 
-    private function getJson2() {
-        $json2 = file_get_contents($this->url2);
-        return json_decode($json2, true);
+    public function google()
+    {
+
+        // https://search.yahoo.co.jp/image/search?p=%E6%BF%83%E5%8E%9A%E4%BB%95%E7%AB%8B%E3%81%A6%E7%B5%B9%E3%81%A8%E3%81%86%E3%81%B5&dim=medium
+        $client = new Google_Client();
+        $client->setApplicationName("Client_Library_Examples");
+        $client->setDeveloperKey("AIzaSyBFO18YUFPHOvBD5h3DMIqWURiVLoyjUDA");
+
+        $service = new \Google_Service_Books($client);
+        $optParams = array('filter' => 'free-ebooks');
+        $results = $service->volumes->listVolumes('Henry David Thoreau', $optParams);
+
+        foreach ($results as $item) {
+        echo $item['volumeInfo']['title'], "<br /> \n";
+        }
     }
+
 }
