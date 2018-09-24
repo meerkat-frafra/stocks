@@ -91,7 +91,7 @@ class ZaimApiController extends Controller
                   'user_info'          => '',
                   'updated_at' => date('Y-m-d H:i:s'),
                   ];
-        DB::table('zaims')->where('user_id', 1)->delete(); 
+        DB::table('zaims')->where('user_id', 1)->delete();
         DB::table('zaims')->insert($input);
 
         // Save a Request Token
@@ -278,6 +278,12 @@ class ZaimApiController extends Controller
     } catch (Exception $e) {
       Log::error($e->getMessage());
     }
+  }
+
+  public function clear(Request $request)
+  {
+    DB::table('zaims')->where('user_id', 1)->delete();
+    return redirect('zaim_api');
   }
 
   /**

@@ -42,6 +42,7 @@ Route::get('/zaim_api/profile', ['as' => 'public.zaim_api.profile', 'uses' => 'Z
 Route::get('/zaim_api/receipt', ['as' => 'public.zaim_api.receipt', 'uses' => 'ZaimApiController@receipt']);
 Route::get('/zaim_api/category', ['as' => 'public.zaim_api.category', 'uses' => 'ZaimApiController@category']);
 Route::get('/zaim_api/genre', ['as' => 'public.zaim_api.genre', 'uses' => 'ZaimApiController@genre']);
+Route::get('/zaim_api/clear', ['as' => 'public.zaim_api.clear', 'uses' => 'ZaimApiController@clear']);
 Route::get('/zaim_api', ['as' => 'public.zaim_api', 'uses' => 'ZaimApiController@index']);
 
 // // github
