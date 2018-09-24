@@ -25,7 +25,7 @@ class CreateTableZaimRecordsTable extends Migration
             $table->integer('genre_id');                     // ジャンル ID
             $table->integer('from_account_id');              // 振替元
             $table->unsignedBigInteger('to_account_id');     // 振替先
-            $table->unsignedBigInteger('amount');            // 価格
+            $table->BigInteger('amount');                    // 価格
             $table->text('comment');                         // コメント
             $table->unsignedTinyInteger('active');           // 有効フラグ
             $table->datetime('created');                     // 登録日
