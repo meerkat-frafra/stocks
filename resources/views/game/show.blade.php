@@ -15,72 +15,28 @@
     <div>
         取りたいカードを選んでください
     </div>
-    <ul>
-        <li style="clear:both;"">
-            <div style='width: 100px; height: 100px; background-color:#666; margin: 10px 0;'></div>
-        </li>
-        <li>
-            <div style='width: 100px; height: 100px; background-color:#666; margin: 10px 0;'></div>
-        </li>
-        <li>
-            <div style='width: 100px; height: 100px; background-color:#666; margin: 10px 0;'></div>
-        </li>
-        <li>
-            <div style='width: 100px; height: 100px; background-color:#666; margin: 10px 0;'></div>
-        </li>
-        <li>
-            <div style='width: 100px; height: 100px; background-color:#666; margin: 10px 0;'></div>
-        </li>
-        <li>
-            <div style='width: 100px; height: 100px; background-color:#666; margin: 10px 0;'></div>
-        </li>
-        <li>
-            <div style='width: 100px; height: 100px; background-color:#666; margin: 10px 0;'></div>
-        </li>
-    </ul>
+    
+    <div>
+        @foreach($memberCard[1] as $card)
+            <a href="/game/pull/{{$card}}"><img src="/assets/c/z02.gif" width="80px;"></a>
+        @endforeach
+    </div>
 
     <!-- 手持ちのカード -->
     <h3>手持ちのカード</h3>
-    <ul>
-        <li>
-            <div style='width: 100px; height: 100px; background-color:#666; margin: 10px 0;'></div>
-        </li>
-        <li>
-            <div style='width: 100px; height: 100px; background-color:#666; margin: 10px 0;'></div>
-        </li>
-        <li>
-            <div style='width: 100px; height: 100px; background-color:#666; margin: 10px 0;'></div>
-        </li>
-        <li>
-            <div style='width: 100px; height: 100px; background-color:#666; margin: 10px 0;'></div>
-        </li>
-        <li>
-            <div style='width: 100px; height: 100px; background-color:#666; margin: 10px 0;'></div>
-        </li>
-        <li>
-            <div style='width: 100px; height: 100px; background-color:#666; margin: 10px 0;'></div>
-        </li>
-        <li>
-            <div style='width: 100px; height: 100px; background-color:#666; margin: 10px 0;'></div>
-        </li>
-    </ul>
+    <div>
+        @foreach($memberCard[2] as $card)
+            @if($card == $trash1)
+                <img style='border:2px dotted red;' src="/assets/c/{{ $card }}.gif" width="80px;">
+            @else
+                <a href="/game/trash/{{$card}}">
+                    <img src="/assets/c/{{ $card }}.gif" width="80px;">
+                </a>
+            @endif
+        @endforeach
+    </div>
 
     <hr>
-
-    <!-- 参加者一覧 -->
-    <h3>ゲーム参加者</h3><sup>現在　2名<sup>
-    <ul>
-        <li>lion　（本人）</li>
-        <li>lion　（残り2枚）</li>
-        <li>cat　（残り5枚）</li>
-    </ul>
-
-
-    <!-- ゲームを始める -->
-    <a class="btn btn-primary btn-lg btn-block" href="/stocks/create" role="button" aria-expanded="false" aria-controls="collapseExample">
-        ゲーム開始
-    </a>
-
 
 </div>
 

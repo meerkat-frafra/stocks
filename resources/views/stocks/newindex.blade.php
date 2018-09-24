@@ -20,6 +20,12 @@
           <li><a href="/stocks/new/space/2">貯蔵庫</a></li>
           <li><a href="/stocks/new/space/3">冷凍庫</a></li>
           <li><a href="/stocks/new/space/4">その他</a></li>
+          <li></li>
+          <li><a href="/stocks/zaim">Zaim</a></li>
+          <li><a href="/zaim_api">Zaim認証</a></li>
+          <li><a href="/zaim_api/receipt">Zaimレシート情報取得</a></li>
+          <li><a href="/zaim_api/category">Zaimカテゴリ情報取得</a></li>
+          <li><a href="/zaim_api/genre">Zaimジャンル情報取得</a></li>
         </ul>
       </nav>
     </div>
@@ -33,9 +39,9 @@
       @endif
       @foreach($stocks as $num => $data)
       <div class="card">
-        <img class="card-img-top" src="/assets/bread2.jpg" alt="Card image cap" style="width: 100%;height: 15vw;object-fit: cover;">
+        <!-- <img class="card-img-top" src="/assets/bread2.jpg" alt="Card image cap" style="width: 100%;height: 15vw;object-fit: cover;"> -->
         <div class="card-body">
-          <h5 class="card-title"><a href="/stocks/edit/{{ $data->id }}">{{ $data->name }}</a></h5>
+          <h5 class="card-title" style="font-size:90%;"><a href="/stocks/edit/{{ $data->id }}">{{ mb_strimwidth($data->name, 0, 18, "...", 'UTF-8') }}</a></h5>
           <h6 class="card-subtitle mb-2 text-muted">
             <span class="badge badge-dark">{{ $m_space[$data->space] }}</span>
           </h6>
@@ -56,7 +62,7 @@
           </p> -->
         </div>
         <div class="card-footer">
-          <small class="text-muted">賞味期限：<br>@if ($data->usage == 1 && $data->limit_date) {{ $data->limit_date }} まで@else 不明 @endif</small>
+          <small class="text-muted">賞味期限：@if ($data->usage == 1 && $data->limit_date != '0000-00-00') {{ preg_replace('/[0-9]{4}\//', '', str_replace('-', '/', $data->limit_date)) }} @else 不明 @endif</small>
         </div>
       </div>
       @endforeach

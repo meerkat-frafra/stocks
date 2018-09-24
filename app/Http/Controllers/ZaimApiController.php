@@ -49,27 +49,28 @@ class ZaimApiController extends Controller
   		// Initialize HTTP_OAuth_Consumer
       $oauth = self::_oauth();
 
-			if (!$request->session()->get('type')) $request->session()->put('type', null);
+			if ($request->session()->has('type')) {
+      
+        if ($request->session()->get('type')=='authorize') {
+          // Exchange the Request Token for an Access Token
+          $oauth->setToken($request->session()->get('oauth_token'));
+          $oauth->setTokenSecret($request->session()->get('oauth_token_secret'));
+          $oauth->getAccessToken($this->access_url, $request->input('oauth_verifier'));
 
-      if ($request->session()->get('type')=='authorize') {
-				// Exchange the Request Token for an Access Token
-				$oauth->setToken($request->session()->get('oauth_token'));
-				$oauth->setTokenSecret($request->session()->get('oauth_token_secret'));
-				$oauth->getAccessToken($this->access_url, $request->input('oauth_verifier'));
+          // Save an Access Token
+          $request->session()->put('type', null);
+          $request->session()->put('oauth_token', $oauth->getToken());
+          $request->session()->put('oauth_token_secret', $oauth->getTokenSecret());
 
-				// Save an Access Token
-        $request->session()->put('type', null);
-        $request->session()->put('oauth_token', $oauth->getToken());
-        $request->session()->put('oauth_token_secret', $oauth->getTokenSecret());
+          $input = [
+            'oauth_token'        => $oauth->getToken(),
+            'oauth_token_secret' => $oauth->getTokenSecret(),
+          ];
+          DB::table('zaims')->where('user_id', 1)->update($input);
+        }
+      }
 
-        $input = [
-          'oauth_token'        => $oauth->getToken(),
-          'oauth_token_secret' => $oauth->getTokenSecret(),
-        ];
-        DB::table('zaims')->where('user_id', 1)->update($input);
-			}
-
-      $token = DB::table('zaims')->where('user_id', 1)->first();
+      $token = DB::table('zaims')->where('user_id', 1)->where('updated_at', '>=', date('Y-m-d H:i:s', strtotime('-1 day')))->first();
       if (!empty($token)) {
         // 認証済み
       } else {
@@ -90,6 +91,7 @@ class ZaimApiController extends Controller
                   'user_info'          => '',
                   'updated_at' => date('Y-m-d H:i:s'),
                   ];
+        DB::table('zaims')->where('user_id', 1)->delete(); 
         DB::table('zaims')->insert($input);
 
         // Save a Request Token
@@ -102,6 +104,7 @@ class ZaimApiController extends Controller
         return redirect()->away($authorize_url);
       }
       Log::info('Zaimアカウントの認証を行いました');
+      echo 'Zaimアカウントの認証を行いました';
 		} catch (Exception $e) {
 			Log::error($e->getMessage());
 		}
@@ -163,6 +166,7 @@ class ZaimApiController extends Controller
 
       if (empty($zaimShoppingInfo['money'])) exit;
 
+      $cnt = 0;
       foreach ($zaimShoppingInfo['money'] as $c) {
         if (DB::table('zaim_records')->where('zaim_id', $c['id'])->count() == 0) {
           $input = [
@@ -185,8 +189,10 @@ class ZaimApiController extends Controller
             'place'           => $c['place'],
           ];
           DB::table('zaim_records')->insert($input);
+          $cnt++;
         }
       }
+      echo $cnt;
       Log::info('ZaimApiからレシート情報を取得しました');
       exit;
     } catch (Exception $e) {

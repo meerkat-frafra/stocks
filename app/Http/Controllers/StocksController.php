@@ -53,6 +53,7 @@ class StocksController extends Controller
         $m_space = $this->m_space;
         $stocks = DB::table('stocks')->get();
 
+        // return redirect('stocks/new');
         return view('stocks.index', compact('stocks', 'm_space'));
     }
 
@@ -74,7 +75,7 @@ class StocksController extends Controller
         
         $input = $request->all();
 
-        if (!$input['limit_date']) $input['limit_date'] = '';
+        if (!$input['limit_date']) $input['limit_date'] = '0000-00-00 00:00:00';
         if (!$input['memo']) $input['memo'] = '';
 
         unset($input['_token']);
@@ -253,11 +254,57 @@ class StocksController extends Controller
         ->leftJoin('zaim_genres', 'zaim_records.genre_id', '=', 'zaim_genres.genre_id')
         ->select('zaim_records.*', 'zaim_categories.name as category_name', 'zaim_genres.name as genre_name')
         ->whereNotIn('zaim_records.name', ['', '外税', '割引'])
+        ->where('zaim_records.active', '1')
         ->where('zaim_records.category_id', '101')
         ->where('zaim_records.genre_id', '10101')
+        ->orderBy('zaim_id', 'desc')
+        ->orderBy('id', 'desc')
         ->get();
 
         return view('stocks.zaim', compact('stocks', 'm_space'));
+    }
+
+    public function zaimImport($id)
+    {
+        $stocks = DB::table('zaim_records')
+        ->leftJoin('zaim_categories', 'zaim_records.category_id', '=', 'zaim_categories.category_id')
+        ->leftJoin('zaim_genres', 'zaim_records.genre_id', '=', 'zaim_genres.genre_id')
+        ->select('zaim_records.*', 'zaim_categories.name as category_name', 'zaim_genres.name as genre_name')
+        ->where('zaim_records.id', $id)
+        ->orderBy('zaim_id', 'desc')
+        ->orderBy('id', 'desc')
+        ->first();
+
+        $input['name'] = $stocks->name;
+        $input['category'] = $stocks->category_id;
+        $input['space'] = 1;
+        $input['limit_date'] = '0000-00-00';
+        $input['memo'] = '';
+        $input['usage'] = 1;
+        $input['balance'] = 1;
+        $input['category'] = 0;
+        $input['shop'] = '';
+        $input['author'] = 1;
+        $input['rebuy'] = 0;
+        $input['rank'] = 0;
+        $input['price'] = 0;
+        $input['is_sync'] = true;
+        $input['receipt_id'] = $stocks->receipt_id;
+        $input['is_show'] = false;
+        $input['purchase_date'] = $stocks->date;
+        $input['created_at'] = date('Y-m-d H:i:s');
+        $input['updated_at'] = date('Y-m-d H:i:s');
+
+        DB::table('stocks')->insert($input);
+
+        return redirect('stocks/zaim');
+    }
+
+    public function zaimDelete($id)
+    {
+        $stocks = DB::table('zaim_records')->where('id', $id)->update(['active' => 9]);
+
+        return redirect('stocks/zaim');
     }
 
     public function google()

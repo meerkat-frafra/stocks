@@ -6,31 +6,14 @@
 
 <h1>カードゲームをはじめる</h1>
 
+    <form action='/game/room' method='get'>
     <div>
-        ニックネーム：<input type="text">
+        ニックネーム：<input type="text" name="nickname">
     </div>
-    <!-- LINEで友達を誘う -->
-    <a class="btn btn-primary btn-lg btn-block" href="/stocks/create" role="button" aria-expanded="false" aria-controls="collapseExample">
-        LINEで送る
-    </a>
-
-    <!-- QRコードで友達を誘う -->
-    <div style='width: 100px; height: 100px; background-color:#666; margin: 10px 0;'></div>
-
-    <!-- 参加者一覧 -->
-    <h3>ゲーム参加者</h3><sup>現在　2名<sup>
-    <ul>
-        <li>lion</li>
-        <li>lion</li>
-        <li>cat</li>
-    </ul>
-
-
-    <!-- ゲームを始める -->
-    <a class="btn btn-primary btn-lg btn-block" href="/stocks/create" role="button" aria-expanded="false" aria-controls="collapseExample">
-        ゲーム開始
-    </a>
-
+    <div style='margin-top: 10px;'>
+        <input type='submit' value='ゲーム部屋を作る' class="btn btn-primary btn-lg btn-block" >
+    </div>
+    </form>
 
 </div>
 
