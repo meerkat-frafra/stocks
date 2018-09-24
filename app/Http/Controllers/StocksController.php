@@ -219,6 +219,7 @@ class StocksController extends Controller
         $m_space = $this->m_space;
         $stocks = DB::table('stocks')->get();
 
+        return redirect('stocks');
         return view('stocks.newindex', compact('stocks', 'm_space'));
     }
 
@@ -233,7 +234,8 @@ class StocksController extends Controller
         $m_space = $this->m_space;
         $stocks = DB::table('stocks')->where('space', $space)->get();
 
-        return view('stocks.newindex', compact('stocks', 'm_space'));
+        return view('stocks.index', compact('stocks', 'm_space'));
+        // return view('stocks.newindex', compact('stocks', 'm_space'));
     }
 
     /**

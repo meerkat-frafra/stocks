@@ -7,7 +7,8 @@
 <h1>Stocks - 在庫リスト</h1>
 
     <div class="alert alert-success" role="alert">
-        <a href="/stocks/new">画像付き一覧</a><a style="margin-left:20px;" href="/stocks/zaim">Zaimデータ</a>
+        <a href="/stocks/new">全て</a>
+        <a style="margin-left:20px;" href="/stocks/zaim">Zaimデータ</a>
     </div>
 
     <table class="table">
@@ -27,7 +28,7 @@
           <!-- <th scope="row">{{ $num +1 }}</th> -->
           <td>
             
-            <span class="badge badge-dark">{{ $m_space[$data->space] }}</span>
+            <span class="badge badge-dark"><a href="/stocks/new/space/{{ $data->space }}" style='color:#fff;'>{{ $m_space[$data->space] }}</a></span>
             <a href="/stocks/edit/{{ $data->id }}">{{ $data->name }}</a>
             <small class="text-muted">@if ($data->usage == 1 && $data->limit_date != '0000-00-00') {{ preg_replace('/[0-9]{4}\//', '', str_replace('-', '/', $data->limit_date)) }} @endif</small>  
           </td>
