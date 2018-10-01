@@ -16,6 +16,19 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\Event' => [
             'App\Listeners\EventListener',
         ],
+        'App\Events\OrderShipped' => [
+            'App\Listeners\SendShipmentNotification',
+        ],
+        'App\Events\AccessDetection' => [
+            'App\Listeners\MakeTextListener',
+        ],
+        'App\Events\PullcardDetection' => [
+            'App\Listeners\PullcardListener',
+        ],
+    ];
+
+    protected $subscribe =[
+        'App\Listeners\UserEventSubscriber',
     ];
 
     /**
@@ -28,5 +41,8 @@ class EventServiceProvider extends ServiceProvider
         parent::boot();
 
         //
+        // Event::listen('event.name', function ($foo, $bar) {
+        //     //
+        // });
     }
 }

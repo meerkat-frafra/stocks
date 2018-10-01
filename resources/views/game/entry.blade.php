@@ -8,7 +8,7 @@
 
     <form action='/game/entryin' method='get'>
     <div>
-        こちらは、{{ $roomOwner }} さんのゲーム部屋です。
+        こちらは、{{ $game_rooms->owner }} さんのゲーム部屋です。
         <br>
         ニックネームを入力の上、入室してください。
     </div>
@@ -17,7 +17,7 @@
     </div>
     <div style='margin-top: 10px;'>
         <input type='submit' value='ゲーム部屋に入る' class="btn btn-primary btn-lg btn-block" >
-        <input type='hidden' value='{{ $roomNumber }}' name="roomNumber">
+        <input type='hidden' value='{{ $game_rooms->id }}' name="roomId">
     </div>
     </form>
 

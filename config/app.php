@@ -161,9 +161,11 @@ return [
          */
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
+        App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+
+        Barryvdh\Debugbar\ServiceProvider::class,
 
     ],
 
@@ -216,7 +218,7 @@ return [
 
         // 'Socialite' => Laravel\Socialite\Facades\Socialite::class,
         // 'Twitter' => Thujohn\Twitter\Facades\Twitter::class,
-
+        'Debugbar' => Barryvdh\Debugbar\Facade::class,
     ],
 
 ];

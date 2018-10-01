@@ -53,14 +53,76 @@ Route::get('auth/{service}', 'Auth\LoginController@redirectToProvider');
 Route::get('auth/{service}/callback', 'Auth\LoginController@handleProviderCallback');
 
 // Card Game
-Route::get('game/trash/{card}', 'GameController@trash');
-Route::get('game/pull/{card}', 'GameController@pull');
-Route::get('game/room', 'GameController@room');
-Route::get('game/entry/{id}', 'GameController@entry');
-Route::get('game/entryin', 'GameController@entryIn');
-Route::get('game/', 'GameController@');
-Route::get('game/show/{id?}', 'GameController@show');
-Route::get('game', 'GameController@index');
+// Route::get('game/webhook', 'GameController@pushTest');
+// Route::get('/hello', function(){
+//     // event(new \App\Events\PusherEvent);
+//     return view('pusher2');
+// });
+
+// userA : game 
+//         -> game/room 
+//         -> game/invite
+//         -> ルームに入ってきた！ -> game/start
+//         -> game/trash/{card}
+//         -> game/ready
+//         -> 待ち・・・
+        
+//         -> カードが引かれた！
+
+//         -> 引く番だよ！ -> game/pull/{card}
+//         -> 同じカードがあれば、削除 -> game/trash/{card}
+//         -> game/ready
+
+//         -> 負けました
+
+// userB : game/entry/{id}
+//         -> game/entryin
+//         -> game/trash/{card}
+//         -> game/ready
+//         -> 引く番だよ！ -> game/pull/{card}
+//         -> 同じカードがあれば、削除 -> game/trash/{card}
+//         -> game/ready
+//         -> 待ち・・・
+
+//         -> カードが引かれた！
+
+//         -> 引く番だよ！ -> game/pull/{card}
+//         -> 同じカードがあれば、削除 -> game/trash/{card}
+//         -> game/ready
+
+//         -> カードがなくなった！クリア！
+
+
+// Route::get('game/push', 'GameController@pushTest');
+Route::get('game/trash/{card}', 'GameController@trash'); // カードを捨てる
+Route::get('game/pull/{card}', 'GameController@pull'); // カードを引く
+Route::get('game/oke/', 'GameController@oke'); // カードを引く順番を次に進める
+Route::get('game/room', 'GameController@room'); // 招待
+Route::get('game/entry/{roomId}', 'GameController@entry'); // 入室受付
+Route::any('game/entryin', 'GameController@entryin'); // 入室
+Route::any('game/ready/{roomId}', 'GameController@ready'); // 待合室
+Route::get('game/show/{roomId?}', 'GameController@show'); // ゲーム部屋
+Route::get('game/showroom', 'GameController@showroom'); // ゲーム部屋
+Route::get('game/showroom2', 'GameController@showroom2'); // ゲーム部屋
+Route::get('game', 'GameController@index'); // ゲーム部屋開設
+
+Route::get('/', function() {
+    return view('pusher');
+});
+
+Route::get('/pusher', function() {
+
+    event(new \App\Events\PusherEvent);
+    \Log::info('aaa');
+});
+
+Route::get('events', 'PusherController@events');
+Route::get('events2', 'PusherController@events2');
+
+Route::get('pullcard', 'PusherController@pullcard');
+Route::get('pullcard2', 'PusherController@pullcard2');
+
+// Route::get('pusher', 'PusherController@pusher');
 
 Auth::routes();
 
